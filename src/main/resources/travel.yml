@@ -1,0 +1,8 @@
+oldOrth:
+  1:
+    name: 新しいテレポート
+    lore:
+      - 謎に包まれた場所
+      - なにもしない
+    material: STONE
+    location: loc

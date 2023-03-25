@@ -1,0 +1,17 @@
+name: DiveRegion
+version: ${project.version}
+main: com.flora30.diveregion.DiveRegion
+api-version: 1.17
+depend: [ DiveAPI ]
+authors: [ flora30 ]
+description: regions
+commands:
+  tel:
+    permission-message: Unknown command. Type "/help" for help.
+    permission: diveregion.*
+  travel:
+    permission-message: Unknown command. Type "/help" for help.
+    permission: diveregion.*
+permissions:
+  diveregion.*:
+    default: op
