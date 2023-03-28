@@ -35,6 +35,8 @@ dependencies {
     compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7.2.6'
     compileOnly 'com.sk89q.worldedit:worldedit-core:7.2.6'
     compileOnly 'io.lumine:Mythic-Dist:5.0.0-SNAPSHOT'
+
+    compileOnly fileTree('libs')
 }
 
 group = 'com.flora30'
