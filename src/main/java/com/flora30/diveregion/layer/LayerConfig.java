@@ -1,11 +1,12 @@
 package com.flora30.diveregion.layer;
 
-import com.flora30.diveapi.event.LayerLoadEvent;
-import com.flora30.diveapi.tools.Config;
+import com.flora30.diveapin.event.LayerLoadEvent;
+import com.flora30.diveapin.util.Config;
+import com.flora30.divenew.data.Layer;
+import com.flora30.divenew.data.LayerArea;
+import com.flora30.divenew.data.LayerObject;
+import com.flora30.divenew.data.penalty.*;
 import com.flora30.diveregion.DiveRegion;
-import com.flora30.diveregion.penalty.Penalties;
-import com.flora30.diveregion.penalty.PenaltyMain;
-import com.flora30.diveregion.penalty.penalty_type.*;
 import com.flora30.diveregion.spawner.Spawner;
 import com.flora30.diveregion.spawner.SpawnerMain;
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -14,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
 import java.util.*;
@@ -45,43 +47,48 @@ public class LayerConfig extends Config {
                 }
                 //座標取得→Layer新規作成
                 String x = section.getString("location.X");
+                String y = section.getString("location.Y");
                 String z = section.getString("location.Z");
-                if(x == null || z == null){
+                if(x == null || y == null || z == null){
                     continue;
                 }
                 String[] x2 = x.split(",");
+                String[] y2 = y.split(",");
                 String[] z2 = z.split(",");
                 String world = section.getString("location.world");
 
                 //エリア作成
-                LayerArea area = new LayerArea(Integer.parseInt(x2[0]),Integer.parseInt(x2[1]),Integer.parseInt(z2[0]),Integer.parseInt(z2[1]),world);
-                Layer layer = new Layer(area);
-                Penalties penalties = new Penalties();
+                LayerArea area = new LayerArea(Integer.parseInt(x2[0]),Integer.parseInt(x2[1]),
+                        Integer.parseInt(y2[0]),Integer.parseInt(y2[1]),
+                        Integer.parseInt(z2[0]),Integer.parseInt(z2[1]),
+                        world);
+                Layer layer = new Layer(
+                        area,
+                        section.getString("displayName"),
+                        section.getString("groupName", key),
+                        section.getInt("fall", 0),
+                        section.getBoolean("isTown",false),
+                        section.getInt("exp",0)
+                );
+                List<Penalty> penaltyList = new ArrayList<>();
                 Spawner spawner = new Spawner();
-
-                //表示名
-                layer.displayName = section.getString("displayName");
-                layer.groupName = section.getString("groupName", key);
-                layer.fall = section.getInt("fall", 0);
 
                 //ペナルティがあるか
                 if (section.getBoolean("hasPenalty")){
                     //first
                     Set<Penalty> penaltySet = generatePenalty(section.getStringList("penalty"));
-                    for (Penalty penalty : penaltySet){
-                        penalties.addPenalty(penalty);
-                    }
+                    penaltyList.addAll(penaltySet);
                 }
 
-                main.setLayer(key, layer);
-                PenaltyMain.setPenalties(key,penalties);
+                LayerObject.INSTANCE.getLayerMap().put(key, layer);
+                LayerObject.INSTANCE.getPenaltyMap().put(key,penaltyList);
 
                 //mob
                 if (section.isConfigurationSection("mob")){
                     for (String mobName : section.getConfigurationSection("mob").getKeys(false)){
                         MythicMob mob = MythicMobs.inst().getAPIHelper().getMythicMob(mobName);
                         if (mob == null){
-                            Bukkit.getLogger().info("[DiveCore-Spawn]階層「"+ layer.displayName+"」のmob["+mobName+"]の取得に失敗しました");
+                            Bukkit.getLogger().info("[DiveCore-Spawn]階層「"+ layer.getDisplayName()+"」のmob["+mobName+"]の取得に失敗しました");
                             continue;
                         }
                         double rate = loadOrDefault("Spawn",section,"mob."+mobName,0);
@@ -89,7 +96,7 @@ public class LayerConfig extends Config {
                     }
                 }
                 else{
-                    Bukkit.getLogger().info("[DiveRegion-Spawn]階層「"+ layer.displayName+"」のmob判定に失敗しました");
+                    Bukkit.getLogger().info("[DiveRegion-Spawn]階層「"+ layer.getDisplayName()+"」のmob判定に失敗しました");
                 }
                 SpawnerMain.putSpawner(key,spawner);
 
@@ -97,7 +104,7 @@ public class LayerConfig extends Config {
                 Bukkit.getLogger().info("[LayerLoad]Event fired");
                 DiveRegion.plugin.getServer().getPluginManager().callEvent(event);
 
-                Bukkit.getLogger().info("[DiveRegion-Layer]階層「"+ layer.displayName+"」");
+                Bukkit.getLogger().info("[DiveRegion-Layer]階層「"+ layer.getDisplayName()+"」");
             }
         }
         Bukkit.getLogger().info("[DiveRegion-Layer]階層のロードが完了しました");
@@ -118,25 +125,26 @@ public class LayerConfig extends Config {
             //type分岐
             try {
                 switch (separatedKeys.get(0)) {
-                    case "HP":
+                    case "HP" -> {
                         int amount = Integer.parseInt(separatedKeys.get(1));
                         generated.add(new PenaltyDamage(amount));
-                        break;
-                    case "MaxHP":
+                    }
+                    case "MaxHP" -> {
                         int amount2 = Integer.parseInt(separatedKeys.get(1));
                         generated.add(new PenaltyMaxHPDamage(amount2));
-                        break;
-                    case "Food":
+                    }
+                    case "Food" -> {
                         int amount3 = Integer.parseInt(separatedKeys.get(1));
                         generated.add(new PenaltyFood(amount3));
-                        break;
-                    case "Potion":
+                    }
+                    case "Potion" -> {
                         String type = separatedKeys.get(1);
                         int time = Integer.parseInt(separatedKeys.get(2));
                         int level = Integer.parseInt(separatedKeys.get(3));
-                        generated.add(new PenaltyPotion(type,time,level));
+                        generated.add(new PenaltyPotion(PotionEffectType.getByName(type), time, level));
+                    }
                 }
-            } catch (NumberFormatException | PatternSyntaxException e) {
+            } catch (NumberFormatException | PatternSyntaxException | NullPointerException e) {
                 e.printStackTrace();
             }
         }return generated;
