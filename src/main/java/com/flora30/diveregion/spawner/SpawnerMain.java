@@ -1,6 +1,7 @@
 package com.flora30.diveregion.spawner;
 
-import com.flora30.diveapi.tools.Mathing;
+import com.flora30.diveapin.util.Mathing;
+import com.flora30.divenew.data.LayerObject;
 import com.flora30.diveregion.layer.LayerMain;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
@@ -14,7 +15,7 @@ import java.util.*;
 public class SpawnerMain {
 
     //layerID | spawner
-    private static final Map<String,Spawner> spawnerMap = new HashMap<>();
+    private static final HashMap<String, List<LayerObject.MobData>> mobMap = LayerObject.INSTANCE.getMobMap();
 
     public static void execute(Location location){
         assert location.getWorld() != null;
@@ -32,24 +33,20 @@ public class SpawnerMain {
     }
 
     public static MythicMob getRandomMob(String layerName){
-        if (!spawnerMap.containsKey(layerName)) return null;
+        if (!mobMap.containsKey(layerName)) return null;
 
-        Spawner spawner = spawnerMap.get(layerName);
+        List<LayerObject.MobData> mobDataList = mobMap.get(layerName);
 
         double calcedRate = 0;
-        int randomized = Mathing.getRandomInt( 100);
-        for (String name : spawner.getMobList()){
-            double rate = calcedRate+spawner.getRate(name);
+        int randomized = Mathing.INSTANCE.getRandomInt( 100);
+        for (LayerObject.MobData data : mobDataList){
+            double rate = calcedRate + data.getRate();
             if (randomized <= rate){
-                return MythicMobs.inst().getAPIHelper().getMythicMob(name);
+                return MythicMobs.inst().getAPIHelper().getMythicMob(data.getMobName());
             }
             calcedRate = rate;
         }
 
         return null;
-    }
-
-    public static void putSpawner(String layer, Spawner spawner){
-        spawnerMap.put(layer,spawner);
     }
 }

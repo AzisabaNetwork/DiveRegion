@@ -7,7 +7,6 @@ import com.flora30.divenew.data.LayerArea;
 import com.flora30.divenew.data.LayerObject;
 import com.flora30.divenew.data.penalty.*;
 import com.flora30.diveregion.DiveRegion;
-import com.flora30.diveregion.spawner.Spawner;
 import com.flora30.diveregion.spawner.SpawnerMain;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
@@ -71,7 +70,7 @@ public class LayerConfig extends Config {
                         section.getInt("exp",0)
                 );
                 List<Penalty> penaltyList = new ArrayList<>();
-                Spawner spawner = new Spawner();
+                List<LayerObject.MobData> mobDataList = new ArrayList<>();
 
                 //ペナルティがあるか
                 if (section.getBoolean("hasPenalty")){
@@ -92,13 +91,13 @@ public class LayerConfig extends Config {
                             continue;
                         }
                         double rate = loadOrDefault("Spawn",section,"mob."+mobName,0);
-                        spawner.putMob(mobName,rate);
+                        mobDataList.add(new LayerObject.MobData(mobName,rate));
                     }
                 }
                 else{
                     Bukkit.getLogger().info("[DiveRegion-Spawn]階層「"+ layer.getDisplayName()+"」のmob判定に失敗しました");
                 }
-                SpawnerMain.putSpawner(key,spawner);
+                LayerObject.INSTANCE.getMobMap().put(key,mobDataList);
 
                 LayerLoadEvent event = new LayerLoadEvent(key, section);
                 Bukkit.getLogger().info("[LayerLoad]Event fired");
