@@ -1,5 +1,6 @@
 package com.flora30.diveregion.layer;
 
+import com.flora30.diveconstant.data.Story;
 import com.flora30.divelib.event.LayerLoadEvent;
 import com.flora30.divelib.util.Config;
 import com.flora30.diveconstant.data.Layer;
@@ -11,6 +12,7 @@ import com.flora30.diveregion.spawner.SpawnerMain;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -67,7 +69,12 @@ public class LayerConfig extends Config {
                         section.getString("groupName", key),
                         section.getInt("fall", 0),
                         section.getBoolean("isTown",false),
-                        section.getInt("exp",0)
+                        section.getInt("exp",0),
+                        new Story(
+                                section.getString("displaySub"),
+                                applyColor(section.getStringList("story")),
+                                section.getBoolean("noticeDisplay")
+                        )
                 );
                 List<Penalty> penaltyList = new ArrayList<>();
                 List<LayerObject.MobData> mobDataList = new ArrayList<>();
@@ -108,6 +115,21 @@ public class LayerConfig extends Config {
         }
         Bukkit.getLogger().info("[DiveRegion-Layer]階層のロードが完了しました");
     }
+    private Story getStory(ConfigurationSection section){
+        return new Story(
+                section.getString("displaySub"),
+                applyColor(section.getStringList("story")),
+                section.getBoolean("noticeDisplay")
+        );
+    }
+    private ArrayList<String> applyColor(List<String> list){
+        ArrayList<String> generated = new ArrayList<>();
+        for(String str : list){
+            generated.add(ChatColor.translateAlternateColorCodes('&', str));
+        }
+        return generated;
+    }
+
 
     @Override
     public void save() {
