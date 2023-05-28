@@ -1,6 +1,8 @@
 package com.flora30.diveregion.travel;
 
-import com.flora30.diveapi.plugins.RegionAPI;
+import com.flora30.diveconstant.data.LayerObject;
+import com.flora30.diveconstant.data.teleport.TravelData;
+import com.flora30.diveconstant.data.teleport.TravelObject;
 import com.flora30.diveregion.DiveRegion;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -15,10 +17,10 @@ import java.util.Map;
 
 public class TravelMain {
     // LayerName | ファストトラベルで行ける場所
-    public static Map<String, List<TravelData>> travelMap = new HashMap<>();
+    private static Map<String, List<TravelData>> travelMap = TravelObject.INSTANCE.getTravelMap();
 
     public static void onCommand(Player player, String sub1, String sub2) {
-        String layerName = RegionAPI.getLayerName(player.getLocation());
+        String layerName = LayerObject.INSTANCE.getLayerName(player.getLocation());
         if (layerName == null) {
             player.sendMessage(ChatColor.RED + "どこかのエリア内にいる必要があります");
             return;
@@ -43,7 +45,7 @@ public class TravelMain {
                 DiveRegion.plugin.asyncTask(() -> DiveRegion.travelConfig.save(layerName));
             }
             case "remove" -> {
-                boolean removed = travelList.removeIf(o -> ChatColor.stripColor(o.name).equals(sub2));
+                boolean removed = travelList.removeIf(o -> ChatColor.stripColor(""+o.getName()).equals(sub2));
                 if (removed) {
                     player.sendMessage(layerName+"のファストトラベルから"+sub2+"を削除しました");
                     DiveRegion.plugin.asyncTask(() -> DiveRegion.travelConfig.save(layerName));
@@ -54,7 +56,7 @@ public class TravelMain {
             case "list" -> {
                 player.sendMessage("==== "+layerName+"のファストトラベル一覧 ====");
                 for (TravelData data : travelList) {
-                    player.sendMessage(" -> "+data.name);
+                    player.sendMessage(" -> "+data.getName());
                 }
             }
         }

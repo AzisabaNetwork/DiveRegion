@@ -1,6 +1,7 @@
 package com.flora30.diveregion;
 
-import com.flora30.diveapi.DiveAPI;
+import com.flora30.diveconstant.DiveConstant;
+import com.flora30.divelib.DiveLib;
 import com.flora30.diveregion.layer.LayerConfig;
 import com.flora30.diveregion.penalty.PenaltyMain;
 import com.flora30.diveregion.teleport.TeleportConfig;
@@ -34,12 +35,12 @@ public final class DiveRegion extends JavaPlugin {
 
     // Core、Questのイベント登録後（LayerLoadEvent）
     public void layerLoad() {
-        if (DiveAPI.coreEventReady && DiveAPI.questEventReady) {
+        if (DiveLib.plugin.getCoreEventReady() && DiveLib.plugin.getQuestEventReady()) {
             new LayerConfig().load();
             return;
         }
 
-        DiveAPI.plugin.delayedTask(2, this::layerLoad);
+        DiveLib.plugin.delayedTask(2, this::layerLoad);
     }
 
     @Override

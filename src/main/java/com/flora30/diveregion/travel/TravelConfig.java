@@ -1,6 +1,8 @@
 package com.flora30.diveregion.travel;
 
-import com.flora30.diveapi.tools.Config;
+import com.flora30.diveconstant.data.teleport.TravelData;
+import com.flora30.diveconstant.data.teleport.TravelObject;
+import com.flora30.divelib.util.Config;
 import com.flora30.diveregion.DiveRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -38,10 +40,10 @@ public class TravelConfig extends Config {
             ConfigurationSection layerSec = config.getConfigurationSection(layerName);
             assert layerSec != null;
 
-            if (!TravelMain.travelMap.containsKey(layerName)) {
-                TravelMain.travelMap.put(layerName,new ArrayList<>());
+            if (!TravelObject.INSTANCE.getTravelMap().containsKey(layerName)) {
+                TravelObject.INSTANCE.getTravelMap().put(layerName,new ArrayList<>());
             }
-            List<TravelData> travelList = TravelMain.travelMap.get(layerName);
+            List<TravelData> travelList = TravelObject.INSTANCE.getTravelMap().get(layerName);
 
             for (String index : layerSec.getKeys(false)) {
                 ConfigurationSection indexSec = layerSec.getConfigurationSection(index);
@@ -70,9 +72,7 @@ public class TravelConfig extends Config {
                 ItemMeta meta = icon.getItemMeta();
                 assert meta != null;
                 meta.setDisplayName(ChatColor.GOLD + name);
-                for (int i = 0; i < lore.size(); i++) {
-                    lore.set(i,ChatColor.WHITE + lore.get(i));
-                }
+                lore.replaceAll(s -> ChatColor.WHITE + s);
                 meta.setLore(lore);
                 icon.setItemMeta(meta);
 
@@ -92,7 +92,7 @@ public class TravelConfig extends Config {
     }
 
     public void save(String layerName) {
-        List<TravelData> travelList = TravelMain.travelMap.get(layerName);
+        List<TravelData> travelList = TravelObject.INSTANCE.getTravelMap().get(layerName);
         if (travelList == null) {
             Bukkit.getLogger().info("[DiveRegion-Travel] "+layerName+"のファストトラベルデータは存在しないため、保存できません");
             return;
@@ -107,13 +107,13 @@ public class TravelConfig extends Config {
         for (int i = 0; i < size; i++) {
             ConfigurationSection indexSec = layerSec.createSection(String.valueOf(i));
             TravelData data = travelList.get(i);
-            ItemMeta meta = data.icon.getItemMeta();
+            ItemMeta meta = data.getIcon().getItemMeta();
             assert meta != null;
 
-            indexSec.set("name",data.name);
+            indexSec.set("name",""+data.getName());
             indexSec.set("lore",meta.getLore());
-            indexSec.set("material",data.icon.getType().toString());
-            indexSec.set("location",data.location);
+            indexSec.set("material",data.getIcon().getType().toString());
+            indexSec.set("location",data.getLocation());
         }
 
         // ファイルに保存する
