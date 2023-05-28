@@ -1,6 +1,8 @@
 package com.flora30.diveregion;
 
 import com.flora30.divelib.event.FirstJoinEvent;
+import com.flora30.divelib.event.MenuClickEvent;
+import com.flora30.divelib.event.MenuOpenEvent;
 import com.flora30.diveregion.layer.LayerMain;
 import com.flora30.diveregion.penalty.PenaltyMain;
 import com.flora30.diveregion.spawner.SpawnerTrigger;
@@ -79,6 +81,17 @@ public class Listeners implements Listener, CommandExecutor {
             TeleportTrigger.onMove(e);
             LayerMain.layerCheck(e.getPlayer());
         }
+    }
+
+    @EventHandler
+    public void onMenuOpen(MenuOpenEvent e){
+        TravelMain.onMenuOpen(e);
+        TeleportTrigger.onMenuOpen(e);
+    }
+    @EventHandler
+    public void onMenuClick(MenuClickEvent e){
+        TravelMain.onMenuClick(e);
+        TeleportTrigger.onMenuClick(e);
     }
 
     //とりあえずshiftキーで

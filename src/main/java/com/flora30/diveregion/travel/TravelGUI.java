@@ -1,11 +1,15 @@
 package com.flora30.diveregion.travel;
 
+import com.flora30.diveconstant.data.Layer;
+import com.flora30.diveconstant.data.LayerObject;
+import com.flora30.diveconstant.data.Story;
 import com.flora30.diveconstant.data.teleport.TravelData;
 import com.flora30.diveconstant.data.teleport.TravelObject;
 import com.flora30.divelib.data.player.PlayerData;
 import com.flora30.divelib.data.player.PlayerDataObject;
 import com.flora30.divelib.event.HelpEvent;
 import com.flora30.divelib.event.HelpType;
+import com.flora30.divelib.event.MenuOpenEvent;
 import com.flora30.divelib.util.GuiItem;
 import com.flora30.diveregion.teleport.TeleportMain;
 import org.bukkit.Bukkit;
@@ -17,6 +21,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,14 +41,9 @@ public class TravelGUI {
         List<TravelData> travelList = TravelObject.INSTANCE.getTravelMap().get(layerName);
         int travelSize = Math.min(travelList.size(), travelRegion.size());
 
-        Story story = QuestAPI.getStory(layerName);
-        if (story == null) {
-            Bukkit.getLogger().info("[DiveRegion-TravelGUI] "+layerName+" の表示名がありません");
-            return null;
-        }
-        String layerDisplayName = story.displayName;
+        Layer layer = LayerObject.INSTANCE.getLayerMap().get(layerName);
 
-        Inventory inv = Bukkit.createInventory(null,27,"ファストトラベル ‣ "+layerDisplayName);
+        Inventory inv = Bukkit.createInventory(null,27,"ファストトラベル ‣ "+layer.getDisplayName());
         GuiItem.INSTANCE.grayBack(inv);
 
         for (int i = 0; i < travelSize; i++) {
@@ -67,7 +67,7 @@ public class TravelGUI {
         if (event.getSlot() == event.getClickedInventory().getSize() - 1) {
             Player player = ((Player) event.getWhoClicked());
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK,1,1);
-            CoreAPI.openMenu(player);
+            Bukkit.getPluginManager().callEvent(new MenuOpenEvent(player,new HashMap<>()));
             return;
         }
 

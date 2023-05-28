@@ -5,6 +5,8 @@ import com.flora30.diveconstant.data.teleport.RelateParticle;
 import com.flora30.diveconstant.data.teleport.TeleportObject;
 import com.flora30.diveconstant.data.teleport.VoidRegion;
 import com.flora30.divelib.DiveLib;
+import com.flora30.divelib.data.Rope;
+import com.flora30.divelib.data.RopeObject;
 import com.flora30.divelib.data.player.PlayerData;
 import com.flora30.divelib.data.player.PlayerDataObject;
 import com.flora30.diveregion.DiveRegion;
@@ -88,7 +90,13 @@ public class VoidTP {
 
         //階層型テレポートの後に何かを表示するならここ
         for (int i = 0; i < 10; i++) {
-            DiveRegion.plugin.delayedTask(i * 2, () -> ItemAPI.displayAllRope(player,true));
+            DiveRegion.plugin.delayedTask(i * 2, () -> {
+                for (Rope rope : RopeObject.INSTANCE.getRopeSet()){
+                    if (rope.getLookingPlayers().contains(player)){
+                        RopeObject.INSTANCE.display(rope,player,true);
+                    }
+                }
+            });
         }
         playEffect(player);
     }
@@ -125,8 +133,15 @@ public class VoidTP {
         doTeleport(player,loc);
 
         //階層型テレポートの後に何かを表示するならここ
+        //TP直後のワールド読み込みに余裕を持たせて10回繰り返し
         for (int i = 0; i < 10; i++) {
-            DiveRegion.plugin.delayedTask(i * 2, () -> ItemAPI.displayAllRope(player,true));
+            DiveRegion.plugin.delayedTask(i * 2, () -> {
+                for (Rope rope : RopeObject.INSTANCE.getRopeSet()){
+                    if (rope.getLookingPlayers().contains(player)){
+                        RopeObject.INSTANCE.display(rope,player,true);
+                    }
+                }
+            });
         }
         playEffect(player);
     }

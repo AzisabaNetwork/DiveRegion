@@ -3,10 +3,16 @@ package com.flora30.diveregion.travel;
 import com.flora30.diveconstant.data.LayerObject;
 import com.flora30.diveconstant.data.teleport.TravelData;
 import com.flora30.diveconstant.data.teleport.TravelObject;
+import com.flora30.divelib.data.MenuSlot;
+import com.flora30.divelib.data.player.PlayerData;
+import com.flora30.divelib.data.player.PlayerDataObject;
+import com.flora30.divelib.event.MenuClickEvent;
+import com.flora30.divelib.event.MenuOpenEvent;
 import com.flora30.diveregion.DiveRegion;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -58,6 +64,38 @@ public class TravelMain {
                 for (TravelData data : travelList) {
                     player.sendMessage(" -> "+data.getName());
                 }
+            }
+        }
+    }
+
+    public static void onMenuOpen(MenuOpenEvent e){
+        ItemStack icon = new ItemStack(Material.IRON_BOOTS);
+        ItemMeta meta = icon.getItemMeta();
+        assert meta != null;
+        meta.setDisplayName(ChatColor.GOLD + "ファストトラベル");
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
+        // ファストトラベルが使えない場合
+        PlayerData data = PlayerDataObject.INSTANCE.getPlayerDataMap().get(e.getPlayer().getUniqueId());
+        if (data == null || !TravelObject.INSTANCE.getTravelMap().containsKey(data.getLayerData().getLayer())) {
+            icon.setType(Material.BARRIER);
+            List<String> lore = new ArrayList<>();
+            lore.add("");
+            lore.add(ChatColor.WHITE + "現在の場所ではファストトラベルができません");
+            meta.setLore(lore);
+        }
+
+        icon.setItemMeta(meta);
+
+        e.getIconMap().put(MenuSlot.Slot3,icon);
+    }
+    public static void onMenuClick(MenuClickEvent e){
+        if (e.getSlot() == MenuSlot.Slot3){
+            if (e.getIcon().getType() == Material.IRON_BOOTS){
+                e.getPlayer().openInventory(TravelGUI.getGui(e.getPlayer()));
+            }
+            else{
+                e.setUseClickSound(false);
             }
         }
     }
