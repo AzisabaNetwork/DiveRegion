@@ -1,9 +1,9 @@
 package com.flora30.diveregion.teleport;
 
-import com.flora30.diveapi.data.ItemData;
-import com.flora30.diveapi.plugins.CoreAPI;
-import com.flora30.diveapi.plugins.ItemAPI;
-import com.flora30.diveapi.tools.ItemType;
+import com.flora30.diveconstant.data.item.ItemData;
+import com.flora30.diveconstant.data.item.ItemDataObject;
+import com.flora30.diveconstant.data.item.ItemType;
+import com.flora30.divelib.ItemMain;
 import com.flora30.diveregion.penalty.PenaltyMain;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -16,10 +16,10 @@ public class ReturnTP {
         for (int i = 0; i < size; i++) {
             ItemStack item = player.getInventory().getItem(i);
             if (item == null || item.getItemMeta() == null) continue;
-            ItemData data = ItemAPI.getItemData(ItemAPI.getItemID(item));
+            ItemData data = ItemDataObject.INSTANCE.getItemDataMap().get(ItemMain.INSTANCE.getItemId(item));
             if (data == null) continue;
 
-            if (data.type == ItemType.Artifact) {
+            if (data.getType() == ItemType.Artifact) {
                 if (Math.random() <= 0.5) {
                     player.sendMessage(ChatColor.WHITE + "遺物「"+item.getItemMeta().getDisplayName() + ChatColor.WHITE +"」が失われた・・・");
                     player.getInventory().setItem(i,null);

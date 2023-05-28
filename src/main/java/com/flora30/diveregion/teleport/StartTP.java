@@ -1,9 +1,10 @@
 package com.flora30.diveregion.teleport;
 
-import com.flora30.diveapi.data.PlayerData;
-import com.flora30.diveapi.plugins.CoreAPI;
+import com.flora30.diveconstant.data.teleport.StartRegion;
+import com.flora30.diveconstant.data.teleport.TeleportObject;
+import com.flora30.divelib.data.player.PlayerData;
+import com.flora30.divelib.data.player.PlayerDataObject;
 import com.flora30.diveregion.penalty.PenaltyMain;
-import com.flora30.diveregion.teleport.region.StartRegion;
 import com.flora30.diveregion.teleport.worldedit.UseWorldEdit;
 import com.flora30.diveregion.teleport.worldedit.WorldEditRegion;
 import org.bukkit.Location;
@@ -15,15 +16,15 @@ import java.util.Set;
 
 public class StartTP {
     //String = layerID
-    private static final Map<String, StartRegion> teleportMap = new HashMap<>();
+    private static final Map<String, StartRegion> teleportMap = TeleportObject.INSTANCE.getStartMap();
 
     public static void check(Player player){
-        PlayerData data = CoreAPI.getPlayerData(player.getUniqueId());
+        PlayerData data = PlayerDataObject.INSTANCE.getPlayerDataMap().get(player.getUniqueId());
         if(data == null) return;
         Location loc = player.getLocation().clone();
         for(String id : teleportMap.keySet()){
             //エリアが違う場合を除く
-            if(!id.equals(data.layerData.layer)){
+            if(!id.equals(data.getLayerData().getLayer())){
                 continue;
             }
 

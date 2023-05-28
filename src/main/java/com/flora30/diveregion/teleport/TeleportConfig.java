@@ -1,10 +1,11 @@
 package com.flora30.diveregion.teleport;
 
-import com.flora30.diveapi.tools.Config;
+import com.flora30.diveconstant.data.teleport.AreaRegion;
+import com.flora30.diveconstant.data.teleport.StartRegion;
+import com.flora30.diveconstant.data.teleport.TeleportObject;
+import com.flora30.diveconstant.data.teleport.VoidRegion;
+import com.flora30.divelib.util.Config;
 import com.flora30.diveregion.DiveRegion;
-import com.flora30.diveregion.teleport.region.AreaRegion;
-import com.flora30.diveregion.teleport.region.StartRegion;
-import com.flora30.diveregion.teleport.region.VoidRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -60,12 +61,13 @@ public class TeleportConfig extends Config {
                 Bukkit.getLogger().info("[DiveCore-Teleport]ID「"+key+"」(void)の読み込みに失敗しました");
                 continue;
             }
-            VoidRegion region = new VoidRegion();
-            region.setNext(section.getString("next",null));
-            region.setBefore(section.getString("before",null));
-            region.setRange(section.getInt("range"));
-            region.setCenterPoint(section.getLocation("centerPoint"));
-            VoidTP.putRegion(key,region);
+            VoidRegion region = new VoidRegion(
+                    section.getLocation("centerPoint"),
+                    section.getInt("range"),
+                    section.getString("before"),
+                    section.getString("next")
+            );
+            TeleportObject.INSTANCE.getVoidMap().put(key,region);
             count++;
         }
         Bukkit.getLogger().info("[DiveCore-Teleport]奈落タイプを読み込みました["+count+"]");
@@ -96,13 +98,13 @@ public class TeleportConfig extends Config {
                 for (String key2 : Objects.requireNonNull(section.getConfigurationSection("toLocs")).getKeys(false)){
                     if (section.isLocation("toLocs."+key2)){
                         if (section.getLocation("toLocs."+key2) != null){
-                            region.addLocation(section.getLocation("toLocs."+key2));
+                            region.getLocations().add(section.getLocation("toLocs."+key2));
                         }
                     }
                 }
             }
 
-            StartTP.putRegion(key,region);
+            TeleportObject.INSTANCE.getStartMap().put(key,region);
             count++;
         }
         Bukkit.getLogger().info("[DiveCore-Teleport]開始タイプを読み込みました["+count+"]");
@@ -134,11 +136,9 @@ public class TeleportConfig extends Config {
             AreaRegion region = new AreaRegion(layerName,loc1,loc2);
             region.setError(section.getLocation("error"));
             region.setTo(section.getLocation("to"));
-            region.setNPC(section.getInt("npcToTalk.id"),section.getInt("npcToTalk.progress"));
+            region.setNpcCondition(new int[]{section.getInt("npcToTalk.id"), section.getInt("npcToTalk.progress")});
 
-            region.setOnlyError(section.getBoolean("onlyError"));
-
-            TeleportMain.putRegion(key,region);
+            TeleportObject.INSTANCE.getAreaMap().put(key,region);
             count++;
         }
         Bukkit.getLogger().info("[DiveCore-Teleport]範囲タイプを読み込みました["+count+"]");
@@ -166,7 +166,7 @@ public class TeleportConfig extends Config {
         ConfigurationSection section = config.getConfigurationSection(id);
         assert section != null;
 
-        VoidRegion region = VoidTP.getRegion(id);
+        VoidRegion region = TeleportObject.INSTANCE.getVoidMap().get(id);
         checkAndWrite(section,"next",region.getNext());
         checkAndWrite(section,"before",region.getBefore());
         checkAndWrite(section,"range",region.getRange());
@@ -188,7 +188,7 @@ public class TeleportConfig extends Config {
         ConfigurationSection section = config.getConfigurationSection(id);
         assert section != null;
 
-        StartRegion region = StartTP.getRegion(id);
+        StartRegion region = TeleportObject.INSTANCE.getStartMap().get(id);
         checkAndWrite(section,"loc1",region.getLoc1());
         checkAndWrite(section,"loc2",region.getLoc2());
         //tolocs保存
@@ -217,14 +217,13 @@ public class TeleportConfig extends Config {
         ConfigurationSection section = config.getConfigurationSection(id);
         assert section != null;
 
-        AreaRegion areaRegion = TeleportMain.getAreaTeleport(id);
+        AreaRegion areaRegion = TeleportObject.INSTANCE.getAreaMap().get(id);
         checkAndWrite(section,"layerName",areaRegion.getLayerName());
-        checkAndWrite(section,"npcToTalk.id",areaRegion.getNpc()[0]);
-        checkAndWrite(section,"npcToTalk.progress",areaRegion.getNpc()[1]);
+        checkAndWrite(section,"npcToTalk.id",areaRegion.getNpcCondition()[0]);
+        checkAndWrite(section,"npcToTalk.progress",areaRegion.getNpcCondition()[1]);
         checkAndWrite(section,"loc1",areaRegion.getLoc1());
         checkAndWrite(section,"loc2",areaRegion.getLoc2());
         checkAndWrite(section,"error",areaRegion.getError());
-        checkAndWrite(section,"onlyError",areaRegion.isOnlyError());
         checkAndWrite(section,"to",areaRegion.getTo());
 
         try{

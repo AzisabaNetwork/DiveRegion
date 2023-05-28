@@ -1,13 +1,16 @@
 package com.flora30.diveregion.teleport;
 
-import com.flora30.diveapi.DiveAPI;
-import com.flora30.diveapi.data.PlayerData;
-import com.flora30.diveapi.plugins.CoreAPI;
-import com.flora30.diveapi.plugins.ItemAPI;
+import com.flora30.diveconstant.DiveConstant;
+import com.flora30.diveconstant.data.teleport.RelateParticle;
+import com.flora30.diveconstant.data.teleport.TeleportObject;
+import com.flora30.diveconstant.data.teleport.VoidRegion;
+import com.flora30.divelib.DiveLib;
+import com.flora30.divelib.data.player.PlayerData;
+import com.flora30.divelib.data.player.PlayerDataObject;
 import com.flora30.diveregion.DiveRegion;
 import com.flora30.diveregion.penalty.PenaltyMain;
-import com.flora30.diveregion.teleport.region.VoidRegion;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -19,21 +22,21 @@ import java.util.Set;
 public class VoidTP {
     //奈落テレポート
     //layerName | VoidRegion
-    private static final Map<String, VoidRegion> locationMap = new HashMap<>();
+    private static final Map<String, VoidRegion> locationMap = TeleportObject.INSTANCE.getVoidMap();
 
     //パーティクル座標|パーティクル
-    private static final Set<RelateParticle> teleportParticles = new HashSet<>();
+    private static final Set<RelateParticle> teleportParticles = TeleportObject.INSTANCE.getVoidParticles();
     public static Location returnPoint;
 
     public static void setParticle(){
-        RelateParticle particle1 = new RelateParticle(1,0,0,"END_ROD",0);
-        RelateParticle particle2 = new RelateParticle(-1,0,0,"END_ROD",0);
-        RelateParticle particle3 = new RelateParticle(0,0,1,"END_ROD",0);
-        RelateParticle particle4 = new RelateParticle(1,0,-1,"END_ROD",0);
-        RelateParticle particle5 = new RelateParticle(0.7,0,0.7,"END_ROD",0);
-        RelateParticle particle6 = new RelateParticle(-0.7,0,0.7,"END_ROD",0);
-        RelateParticle particle7 = new RelateParticle(0.7,0,-0.7,"END_ROD",0);
-        RelateParticle particle8 = new RelateParticle(-0.7,0,-0.7,"END_ROD",0);
+        RelateParticle particle1 = new RelateParticle(1,0,0, Particle.END_ROD,0);
+        RelateParticle particle2 = new RelateParticle(-1,0,0,Particle.END_ROD,0);
+        RelateParticle particle3 = new RelateParticle(0,0,1,Particle.END_ROD,0);
+        RelateParticle particle4 = new RelateParticle(1,0,-1,Particle.END_ROD,0);
+        RelateParticle particle5 = new RelateParticle(0.7,0,0.7,Particle.END_ROD,0);
+        RelateParticle particle6 = new RelateParticle(-0.7,0,0.7,Particle.END_ROD,0);
+        RelateParticle particle7 = new RelateParticle(0.7,0,-0.7,Particle.END_ROD,0);
+        RelateParticle particle8 = new RelateParticle(-0.7,0,-0.7,Particle.END_ROD,0);
         addParticle(particle1);
         addParticle(particle2);
         addParticle(particle3);
@@ -52,10 +55,10 @@ public class VoidTP {
         }
 
         Location loc = player.getLocation().clone();
-        PlayerData data = CoreAPI.getPlayerData(player.getUniqueId());
+        PlayerData data = PlayerDataObject.INSTANCE.getPlayerDataMap().get(player.getUniqueId());
         if(data == null) return;
         //現在のregion
-        VoidRegion region = locationMap.get(data.layerData.layer);
+        VoidRegion region = locationMap.get(data.getLayerData().getLayer());
         if (region == null){
             return;
         }
@@ -97,9 +100,9 @@ public class VoidTP {
         }
 
         Location loc = player.getLocation().clone();
-        PlayerData data = CoreAPI.getPlayerData(player.getUniqueId());
+        PlayerData data = PlayerDataObject.INSTANCE.getPlayerDataMap().get(player.getUniqueId());
         //現在のregion
-        VoidRegion region = locationMap.get(data.layerData.layer);
+        VoidRegion region = locationMap.get(data.getLayerData().getLayer());
         if (region == null){
             return;
         }
@@ -129,11 +132,14 @@ public class VoidTP {
     }
 
     public static void putRegion(Player player, int range){
-        PlayerData data = CoreAPI.getPlayerData(player.getUniqueId());
-        String layer = data.layerData.layer;
-        VoidRegion region = new VoidRegion();
-        region.setRange(range);
-        region.setCenterPoint(player.getLocation());
+        PlayerData data = PlayerDataObject.INSTANCE.getPlayerDataMap().get(player.getUniqueId());
+        String layer = data.getLayerData().getLayer();
+        VoidRegion region = new VoidRegion(
+                player.getLocation(),
+                range,
+                null,
+                null
+        );
         locationMap.put(layer,region);
         new TeleportConfig().saveVoid(layer);
     }
@@ -146,7 +152,7 @@ public class VoidTP {
             setParticle();
         }
         //10tick後にパーティクル＋サウンド
-        DiveAPI.plugin.delayedTask(10,() -> {
+        DiveLib.plugin.delayedTask(10,() -> {
         for(RelateParticle relate : teleportParticles){
             relate.spawnParticle(player);
         }

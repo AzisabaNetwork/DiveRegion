@@ -1,6 +1,6 @@
 package com.flora30.diveregion;
 
-import com.flora30.diveapi.event.FirstJoinEvent;
+import com.flora30.divelib.event.FirstJoinEvent;
 import com.flora30.diveregion.layer.LayerMain;
 import com.flora30.diveregion.penalty.PenaltyMain;
 import com.flora30.diveregion.spawner.SpawnerTrigger;

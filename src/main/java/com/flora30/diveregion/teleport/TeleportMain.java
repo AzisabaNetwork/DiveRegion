@@ -1,13 +1,13 @@
 package com.flora30.diveregion.teleport;
 
-import com.flora30.diveapi.data.PlayerData;
-import com.flora30.diveapi.plugins.CoreAPI;
+import com.flora30.diveconstant.data.teleport.AreaRegion;
+import com.flora30.diveconstant.data.teleport.TeleportObject;
+import com.flora30.divelib.data.player.PlayerData;
+import com.flora30.divelib.data.player.PlayerDataObject;
 import com.flora30.diveregion.layer.LayerMain;
 import com.flora30.diveregion.penalty.PenaltyMain;
-import com.flora30.diveregion.teleport.region.AreaRegion;
 import com.flora30.diveregion.teleport.worldedit.UseWorldEdit;
 import com.flora30.diveregion.teleport.worldedit.WorldEditRegion;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -21,26 +21,26 @@ public class TeleportMain {
     //範囲テレポート
     //プレイヤーが入る判定：PlayerMoveEvent：エリア：box照合
     //内部にエリアを登録しておく
-    private static final Map<String, AreaRegion> areaTeleportMap = new HashMap<>();
+    private static final Map<String, AreaRegion> areaTeleportMap = TeleportObject.INSTANCE.getAreaMap();
 
     //startはここから分岐
     public static void check(Player player){
-        PlayerData data = CoreAPI.getPlayerData(player.getUniqueId());
+        PlayerData data = PlayerDataObject.INSTANCE.getPlayerDataMap().get(player.getUniqueId());
         if(data == null) return;
         Location loc = player.getLocation().clone();
         for(AreaRegion region : areaTeleportMap.values()){
             //エリアが違う場合を除く
-            if(!region.getLayerName().equals(data.layerData.layer)){
+            if(!region.getLayerName().equals(data.getLayerData().getLayer())){
                 continue;
             }
             //範囲内のとき
             if(region.isInArea(loc)){
                 //Bukkit.getLogger().info("範囲内判定");
                 //npc条件が存在するとき
-                int[] npcData = region.getNpc();
+                int[] npcData = region.getNpcCondition();
                 if(npcData[0] >= 0){
                     //プレイヤーのnpc進捗
-                    int current = data.npcData.getTalkProgress(npcData[0]);
+                    int current = data.getNpcData().getTalkProgress(npcData[0]);
                     //npc条件を満たしていない時
                     if(current < npcData[1]){
                         //エラー座標に送る
@@ -48,7 +48,7 @@ public class TeleportMain {
                         player.sendMessage(ChatColor.RED +"通行条件を満たしていません");
                     }
                     else{
-                        if (!region.isOnlyError()){
+                        if (region.getTo() != null){
                             doTeleport(player,region.getTo());
                         }
                         return;
