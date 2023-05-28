@@ -1,11 +1,11 @@
 package com.flora30.diveregion.layer;
 
-import com.flora30.diveapin.event.LayerLoadEvent;
-import com.flora30.diveapin.util.Config;
-import com.flora30.divenew.data.Layer;
-import com.flora30.divenew.data.LayerArea;
-import com.flora30.divenew.data.LayerObject;
-import com.flora30.divenew.data.penalty.*;
+import com.flora30.divelib.event.LayerLoadEvent;
+import com.flora30.divelib.util.Config;
+import com.flora30.diveconstant.data.Layer;
+import com.flora30.diveconstant.data.LayerArea;
+import com.flora30.diveconstant.data.LayerObject;
+import com.flora30.diveconstant.data.penalty.*;
 import com.flora30.diveregion.DiveRegion;
 import com.flora30.diveregion.spawner.SpawnerMain;
 import io.lumine.xikage.mythicmobs.MythicMobs;

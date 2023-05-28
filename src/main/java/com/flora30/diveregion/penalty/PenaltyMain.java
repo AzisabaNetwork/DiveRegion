@@ -1,13 +1,13 @@
 package com.flora30.diveregion.penalty;
 
-import com.flora30.diveapin.data.player.LayerData;
-import com.flora30.diveapin.data.player.PlayerData;
-import com.flora30.diveapin.data.player.PlayerDataObject;
-import com.flora30.diveapin.event.HelpEvent;
-import com.flora30.diveapin.event.HelpType;
-import com.flora30.diveapin.util.PacketUtil;
-import com.flora30.divenew.data.LayerObject;
-import com.flora30.divenew.data.penalty.Penalty;
+import com.flora30.divelib.data.player.LayerData;
+import com.flora30.divelib.data.player.PlayerData;
+import com.flora30.divelib.data.player.PlayerDataObject;
+import com.flora30.divelib.event.HelpEvent;
+import com.flora30.divelib.event.HelpType;
+import com.flora30.divelib.util.PacketUtil;
+import com.flora30.diveconstant.data.LayerObject;
+import com.flora30.diveconstant.data.penalty.Penalty;
 import com.flora30.diveregion.DiveRegion;
 import com.flora30.diveregion.teleport.VoidTP;
 import org.bukkit.*;

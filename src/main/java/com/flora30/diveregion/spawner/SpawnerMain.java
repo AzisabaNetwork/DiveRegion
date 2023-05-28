@@ -1,7 +1,7 @@
 package com.flora30.diveregion.spawner;
 
-import com.flora30.diveapin.util.Mathing;
-import com.flora30.divenew.data.LayerObject;
+import com.flora30.divelib.util.Mathing;
+import com.flora30.diveconstant.data.LayerObject;
 import com.flora30.diveregion.layer.LayerMain;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
