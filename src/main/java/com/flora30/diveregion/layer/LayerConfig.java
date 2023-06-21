@@ -1,12 +1,12 @@
 package com.flora30.diveregion.layer;
 
-import com.flora30.diveconstant.data.Story;
+import com.flora30.divelib.data.Story;
 import com.flora30.divelib.event.LayerLoadEvent;
 import com.flora30.divelib.util.Config;
-import com.flora30.diveconstant.data.Layer;
-import com.flora30.diveconstant.data.LayerArea;
-import com.flora30.diveconstant.data.LayerObject;
-import com.flora30.diveconstant.data.penalty.*;
+import com.flora30.divelib.data.Layer;
+import com.flora30.divelib.data.LayerArea;
+import com.flora30.divelib.data.LayerObject;
+import com.flora30.divelib.data.penalty.*;
 import com.flora30.diveregion.DiveRegion;
 import com.flora30.diveregion.spawner.SpawnerMain;
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -74,7 +74,8 @@ public class LayerConfig extends Config {
                                 section.getString("displaySub"),
                                 applyColor(section.getStringList("story")),
                                 section.getBoolean("noticeDisplay")
-                        )
+                        ),
+                        section.getStringList("gimmickList")
                 );
                 List<Penalty> penaltyList = new ArrayList<>();
                 List<LayerObject.MobData> mobDataList = new ArrayList<>();

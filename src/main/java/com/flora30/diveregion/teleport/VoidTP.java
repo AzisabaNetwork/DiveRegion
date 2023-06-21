@@ -1,9 +1,9 @@
 package com.flora30.diveregion.teleport;
 
-import com.flora30.diveconstant.DiveConstant;
-import com.flora30.diveconstant.data.teleport.RelateParticle;
-import com.flora30.diveconstant.data.teleport.TeleportObject;
-import com.flora30.diveconstant.data.teleport.VoidRegion;
+import com.flora30.divelib.DiveLib;
+import com.flora30.divelib.data.teleport.RelateParticle;
+import com.flora30.divelib.data.teleport.TeleportObject;
+import com.flora30.divelib.data.teleport.VoidRegion;
 import com.flora30.divelib.DiveLib;
 import com.flora30.divelib.data.Rope;
 import com.flora30.divelib.data.RopeObject;

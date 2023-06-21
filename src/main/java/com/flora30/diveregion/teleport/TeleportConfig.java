@@ -1,9 +1,9 @@
 package com.flora30.diveregion.teleport;
 
-import com.flora30.diveconstant.data.teleport.AreaRegion;
-import com.flora30.diveconstant.data.teleport.StartRegion;
-import com.flora30.diveconstant.data.teleport.TeleportObject;
-import com.flora30.diveconstant.data.teleport.VoidRegion;
+import com.flora30.divelib.data.teleport.AreaRegion;
+import com.flora30.divelib.data.teleport.StartRegion;
+import com.flora30.divelib.data.teleport.TeleportObject;
+import com.flora30.divelib.data.teleport.VoidRegion;
 import com.flora30.divelib.util.Config;
 import com.flora30.diveregion.DiveRegion;
 import org.bukkit.Bukkit;

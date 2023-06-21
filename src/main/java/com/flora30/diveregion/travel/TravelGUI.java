@@ -1,10 +1,10 @@
 package com.flora30.diveregion.travel;
 
-import com.flora30.diveconstant.data.Layer;
-import com.flora30.diveconstant.data.LayerObject;
-import com.flora30.diveconstant.data.Story;
-import com.flora30.diveconstant.data.teleport.TravelData;
-import com.flora30.diveconstant.data.teleport.TravelObject;
+import com.flora30.divelib.data.Layer;
+import com.flora30.divelib.data.LayerObject;
+import com.flora30.divelib.data.Story;
+import com.flora30.divelib.data.teleport.TravelData;
+import com.flora30.divelib.data.teleport.TravelObject;
 import com.flora30.divelib.data.player.PlayerData;
 import com.flora30.divelib.data.player.PlayerDataObject;
 import com.flora30.divelib.event.HelpEvent;

@@ -1,8 +1,8 @@
 package com.flora30.diveregion.teleport;
 
-import com.flora30.diveconstant.data.item.ItemData;
-import com.flora30.diveconstant.data.item.ItemDataObject;
-import com.flora30.diveconstant.data.item.ItemType;
+import com.flora30.divelib.data.item.ItemData;
+import com.flora30.divelib.data.item.ItemDataObject;
+import com.flora30.divelib.data.item.ItemType;
 import com.flora30.divelib.ItemMain;
 import com.flora30.diveregion.penalty.PenaltyMain;
 import org.bukkit.ChatColor;

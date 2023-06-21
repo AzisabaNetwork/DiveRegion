@@ -1,7 +1,7 @@
 package com.flora30.diveregion.travel;
 
-import com.flora30.diveconstant.data.teleport.TravelData;
-import com.flora30.diveconstant.data.teleport.TravelObject;
+import com.flora30.divelib.data.teleport.TravelData;
+import com.flora30.divelib.data.teleport.TravelObject;
 import com.flora30.divelib.util.Config;
 import com.flora30.diveregion.DiveRegion;
 import org.bukkit.Bukkit;

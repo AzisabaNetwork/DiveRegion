@@ -1,7 +1,7 @@
 package com.flora30.diveregion.teleport;
 
-import com.flora30.diveconstant.data.teleport.StartRegion;
-import com.flora30.diveconstant.data.teleport.TeleportObject;
+import com.flora30.divelib.data.teleport.StartRegion;
+import com.flora30.divelib.data.teleport.TeleportObject;
 import com.flora30.divelib.data.player.PlayerData;
 import com.flora30.divelib.data.player.PlayerDataObject;
 import com.flora30.diveregion.penalty.PenaltyMain;

@@ -1,6 +1,5 @@
 package com.flora30.diveregion;
 
-import com.flora30.diveconstant.DiveConstant;
 import com.flora30.divelib.DiveLib;
 import com.flora30.diveregion.layer.LayerConfig;
 import com.flora30.diveregion.penalty.PenaltyMain;

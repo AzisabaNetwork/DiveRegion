@@ -1,10 +1,10 @@
 package com.flora30.diveregion.teleport;
 
-import com.flora30.diveconstant.data.LayerObject;
-import com.flora30.diveconstant.data.Whistle;
-import com.flora30.diveconstant.data.WhistleObject;
-import com.flora30.diveconstant.data.teleport.AreaRegion;
-import com.flora30.diveconstant.data.teleport.StartRegion;
+import com.flora30.divelib.data.LayerObject;
+import com.flora30.divelib.data.Whistle;
+import com.flora30.divelib.data.WhistleObject;
+import com.flora30.divelib.data.teleport.AreaRegion;
+import com.flora30.divelib.data.teleport.StartRegion;
 import com.flora30.divelib.data.MenuSlot;
 import com.flora30.divelib.data.player.PlayerData;
 import com.flora30.divelib.data.player.PlayerDataObject;
